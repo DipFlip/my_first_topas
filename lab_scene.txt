@@ -1,0 +1,123 @@
+# Housed LaBr3 laboratory demo. One 662 keV gamma per history.
+# One worker keeps native XML histogram output consistent on this build.
+i:Ts/NumberOfThreads = 1
+i:Ts/Seed = 314159
+b:Ts/PauseBeforeQuit = "False"
+i:Ts/ShowHistoryCountAtInterval = 25000
+b:Ge/CheckForOverlaps = "True"
+
+s:Ge/World/Material = "G4_AIR"
+d:Ge/World/HLX = 20 cm
+d:Ge/World/HLY = 20 cm
+d:Ge/World/HLZ = 20 cm
+b:Ge/World/Invisible = "True"
+
+# Stoichiometric LaBr3; fractions are mass fractions, not atom fractions.
+# Ce doping is omitted from this energy-deposition demonstration.
+sv:Ma/LaBr3/Components = 2 "Lanthanum" "Bromine"
+uv:Ma/LaBr3/Fractions = 2 0.366875490452 0.633124509548
+d:Ma/LaBr3/Density = 5.08 g/cm3
+s:Ma/LaBr3/DefaultColor = "yellow"
+
+# Crystal diameter 50.8 mm, length 50.8 mm (2 inches x 2 inches).
+s:Ge/Crystal/Type = "TsCylinder"
+s:Ge/Crystal/Parent = "Reflector"
+s:Ge/Crystal/Material = "LaBr3"
+d:Ge/Crystal/RMax = 25.4 mm
+d:Ge/Crystal/HL = 25.4 mm
+d:Ge/Crystal/TransZ = 0 mm
+
+# Parallel beam directed down local +Z, uniformly over a 60 mm radius disk.
+# Source at z=-100 mm; crystal front face at z=-25.4 mm.
+s:Ge/GammaPosition/Type = "Group"
+s:Ge/GammaPosition/Parent = "World"
+d:Ge/GammaPosition/TransZ = -100 mm
+d:Ge/GammaPosition/RotX = 0 deg
+s:So/Gammas/Type = "Beam"
+s:So/Gammas/Component = "GammaPosition"
+s:So/Gammas/BeamParticle = "gamma"
+d:So/Gammas/BeamEnergy = 0.662 MeV
+u:So/Gammas/BeamEnergySpread = 0
+s:So/Gammas/BeamPositionDistribution = "Flat"
+s:So/Gammas/BeamPositionCutoffShape = "Ellipse"
+d:So/Gammas/BeamPositionCutoffX = 60 mm
+d:So/Gammas/BeamPositionCutoffY = 60 mm
+s:So/Gammas/BeamAngularDistribution = "None"
+i:So/Gammas/NumberOfHistoriesInRun = 2000
+
+# Electromagnetic transport only: photoelectric, Compton, Rayleigh, electrons.
+s:Ph/Default/Type = "Geant4_Modular"
+sv:Ph/Default/Modules = 1 "g4em-livermore"
+d:Ph/Default/CutForAllParticles = 0.01 mm
+b:Ph/Default/Fluorescence = "True"
+b:Ph/Default/Auger = "True"
+b:Ph/Default/DeexcitationIgnoreCut = "True"
+
+# Undivided crystal: histogram of the TOTAL energy deposited per event.
+# Include all particles, especially secondary electrons. No gamma-only filter.
+s:Sc/PulseHeight/Quantity = "EnergyDeposit"
+s:Sc/PulseHeight/Component = "Crystal"
+s:Sc/PulseHeight/OutputType = "Xml"
+s:Sc/PulseHeight/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/PulseHeight/HistogramBins = 1600
+d:Sc/PulseHeight/HistogramMin = 0 MeV
+d:Sc/PulseHeight/HistogramMax = 0.8 MeV
+s:Sc/XmlFileName = "results/scene/labr3"
+
+# Independent integral score to verify the histogram's energy sum.
+s:Sc/EnergyCheck/Quantity = "EnergyDeposit"
+s:Sc/EnergyCheck/Component = "Crystal"
+s:Sc/EnergyCheck/OutputType = "csv"
+s:Sc/EnergyCheck/OutputFile = "results/scene/energy_check"
+s:Sc/EnergyCheck/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/EnergyCheck/Report = 3 "Sum" "Mean" "Count_In_Bin"
+
+# Nested cylinders form a 1 mm aluminium can and a 1 mm PTFE reflector,
+# including front/rear end caps. Daughter volumes displace the parent material.
+s:Ge/Housing/Type = "TsCylinder"
+s:Ge/Housing/Parent = "World"
+s:Ge/Housing/Material = "G4_Al"
+d:Ge/Housing/RMax = 27.4 mm
+d:Ge/Housing/HL = 27.4 mm
+s:Ge/Housing/Color = "grey"
+s:Ge/Housing/DrawingStyle = "WireFrame"
+s:Ge/Reflector/Type = "TsCylinder"
+s:Ge/Reflector/Parent = "Housing"
+s:Ge/Reflector/Material = "G4_TEFLON"
+d:Ge/Reflector/RMax = 26.4 mm
+d:Ge/Reflector/HL = 26.4 mm
+s:Ge/Reflector/Color = "white"
+s:Ge/Reflector/DrawingStyle = "WireFrame"
+
+# Deliberate rear scatterer: 200 x 200 x 40 mm aluminium block.
+# Front face z=80 mm: 52.6 mm air gap from the can's rear face.
+s:Ge/BackscatterBlock/Type = "TsBox"
+s:Ge/BackscatterBlock/Parent = "World"
+s:Ge/BackscatterBlock/Material = "G4_Al"
+d:Ge/BackscatterBlock/HLX = 100 mm
+d:Ge/BackscatterBlock/HLY = 100 mm
+d:Ge/BackscatterBlock/HLZ = 20 mm
+d:Ge/BackscatterBlock/TransZ = 100 mm
+s:Ge/BackscatterBlock/Color = "lightblue"
+s:Ge/BackscatterBlock/DrawingStyle = "WireFrame"
+
+# Save real gamma crossings of the rear crystal face. Direction is in column 9.
+# No killing or replay: this diagnostic scorer leaves transport unchanged.
+s:Sc/RearGammas/Quantity = "PhaseSpace"
+s:Sc/RearGammas/Surface = "Crystal/ZPlusSurface"
+s:Sc/RearGammas/OutputType = "ASCII"
+s:Sc/RearGammas/OutputFile = "results/scene/rear_gammas"
+s:Sc/RearGammas/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/RearGammas/OnlyIncludeParticlesNamed = 1 "gamma"
+b:Sc/RearGammas/IncludeEventID = "True"
+b:Sc/RearGammas/IncludeTrackID = "True"
+b:Sc/RearGammas/IncludeParentID = "True"
+
+# Native Geant4 export with real trajectories from a separate small run.
+s:Gr/Scene/Type = "VRML"
+b:Gr/Scene/IncludeGeometry = "True"
+b:Gr/Scene/IncludeTrajectories = "True"
+b:Gr/Scene/UseSmoothTrajectories = "False"
+s:Gr/Scene/ColorBy = "ParticleType"
+sv:Gr/OnlyIncludeParticlesNamed = 1 "gamma"
+s:Gr/RefreshEvery = "Run"

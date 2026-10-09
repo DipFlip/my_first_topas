@@ -1,0 +1,2 @@
+# Preserve native TOPAS/Geant4 output formatting in checked-in demo artifacts.
+results/** -whitespace

@@ -1,0 +1,6 @@
+# TOPAS Version: 4.3
+# Parameter File: labr3.txt
+# Results for scorer: EnergyCheck
+# Scored in component: Crystal
+# EnergyDeposit ( MeV ) : Sum   Mean   Count_in_Bin   
+85393.9453125, 0.4269697143002355, 168702

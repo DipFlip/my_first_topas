@@ -1,0 +1,73 @@
+# LaBr3 gamma spectroscopy demo. One 662 keV gamma per history.
+# One worker keeps native XML histogram output consistent on this build.
+i:Ts/NumberOfThreads = 1
+i:Ts/Seed = 314159
+b:Ts/PauseBeforeQuit = "False"
+i:Ts/ShowHistoryCountAtInterval = 25000
+b:Ge/CheckForOverlaps = "True"
+
+s:Ge/World/Material = "G4_AIR"
+d:Ge/World/HLX = 20 cm
+d:Ge/World/HLY = 20 cm
+d:Ge/World/HLZ = 20 cm
+b:Ge/World/Invisible = "True"
+
+# Stoichiometric LaBr3; fractions are mass fractions, not atom fractions.
+# Ce doping is omitted from this energy-deposition demonstration.
+sv:Ma/LaBr3/Components = 2 "Lanthanum" "Bromine"
+uv:Ma/LaBr3/Fractions = 2 0.366875490452 0.633124509548
+d:Ma/LaBr3/Density = 5.08 g/cm3
+s:Ma/LaBr3/DefaultColor = "yellow"
+
+# Crystal diameter 50.8 mm, length 50.8 mm (2 inches x 2 inches).
+s:Ge/Crystal/Type = "TsCylinder"
+s:Ge/Crystal/Parent = "World"
+s:Ge/Crystal/Material = "LaBr3"
+d:Ge/Crystal/RMax = 25.4 mm
+d:Ge/Crystal/HL = 25.4 mm
+d:Ge/Crystal/TransZ = 0 mm
+
+# Parallel beam directed down local +Z, uniformly over a 10 mm radius disk.
+# Source at z=-100 mm; crystal front face at z=-25.4 mm.
+s:Ge/GammaPosition/Type = "Group"
+s:Ge/GammaPosition/Parent = "World"
+d:Ge/GammaPosition/TransZ = -100 mm
+d:Ge/GammaPosition/RotX = 0 deg
+s:So/Gammas/Type = "Beam"
+s:So/Gammas/Component = "GammaPosition"
+s:So/Gammas/BeamParticle = "gamma"
+d:So/Gammas/BeamEnergy = 0.662 MeV
+u:So/Gammas/BeamEnergySpread = 0
+s:So/Gammas/BeamPositionDistribution = "Flat"
+s:So/Gammas/BeamPositionCutoffShape = "Ellipse"
+d:So/Gammas/BeamPositionCutoffX = 10 mm
+d:So/Gammas/BeamPositionCutoffY = 10 mm
+s:So/Gammas/BeamAngularDistribution = "None"
+i:So/Gammas/NumberOfHistoriesInRun = 200000
+
+# Electromagnetic transport only: photoelectric, Compton, Rayleigh, electrons.
+s:Ph/Default/Type = "Geant4_Modular"
+sv:Ph/Default/Modules = 1 "g4em-livermore"
+d:Ph/Default/CutForAllParticles = 0.01 mm
+b:Ph/Default/Fluorescence = "True"
+b:Ph/Default/Auger = "True"
+b:Ph/Default/DeexcitationIgnoreCut = "True"
+
+# Undivided crystal: histogram of the TOTAL energy deposited per event.
+# Include all particles, especially secondary electrons. No gamma-only filter.
+s:Sc/PulseHeight/Quantity = "EnergyDeposit"
+s:Sc/PulseHeight/Component = "Crystal"
+s:Sc/PulseHeight/OutputType = "Xml"
+s:Sc/PulseHeight/IfOutputFileAlreadyExists = "Overwrite"
+i:Sc/PulseHeight/HistogramBins = 1600
+d:Sc/PulseHeight/HistogramMin = 0 MeV
+d:Sc/PulseHeight/HistogramMax = 0.8 MeV
+s:Sc/XmlFileName = "results/labr3"
+
+# Independent integral score to verify the histogram's energy sum.
+s:Sc/EnergyCheck/Quantity = "EnergyDeposit"
+s:Sc/EnergyCheck/Component = "Crystal"
+s:Sc/EnergyCheck/OutputType = "csv"
+s:Sc/EnergyCheck/OutputFile = "results/energy_check"
+s:Sc/EnergyCheck/IfOutputFileAlreadyExists = "Overwrite"
+sv:Sc/EnergyCheck/Report = 3 "Sum" "Mean" "Count_In_Bin"

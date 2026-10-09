@@ -1,0 +1,26 @@
+{
+  "engine": "OpenTOPAS 4.3.0 / Geant4 11.3.2",
+  "image_digest": "sha256:e9e56294fac4e43ee77d0cc524a8411ce0637ffd8ca61992462dcfa2d774618e",
+  "saved_input_sha256": "2823f70c7ba137dd1bb601e7257cbf7dca22bd6c69c36c1789f359d75d816edb",
+  "histories": 2000,
+  "gamma_energy_keV": 662.0,
+  "geometry_and_physics": "See results/input.txt for the exact saved parameters",
+  "events_with_energy_deposit": 351,
+  "events_with_no_energy_deposit": 1649,
+  "fraction_with_energy_deposit": 0.1755,
+  "near_full_energy_window_keV": [
+    661.5,
+    662.01
+  ],
+  "near_full_energy_events": 160,
+  "near_full_energy_fraction_per_launched_gamma": 0.08,
+  "single_scatter_compton_edge_keV": 477.65040955473023,
+  "assumed_resolution_fwhm_fraction_at_662_keV": 0.03,
+  "assumed_fwhm_at_photopeak_keV": 19.86,
+  "raw_histogram_energy_sum_MeV": 153.4302180635921,
+  "independent_energy_sum_MeV": 153.4302215576172,
+  "relative_energy_sum_difference": 2.2772730552498493e-08,
+  "broadened_expected_counts_below_axis": 1.0772391620646857e-07,
+  "broadened_expected_counts_above_axis": 0.0,
+  "validation": "Event counts and independent energy integral agree"
+}

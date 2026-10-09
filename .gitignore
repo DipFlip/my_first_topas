@@ -1,0 +1,12 @@
+.cache/
+.venv/
+__pycache__/
+results/*.root
+results/*.log
+results/TopasParameterDump*
+results/**/*.log
+!results/topas.log
+!results/**/topas.log
+.playwright-cli/
+output/playwright/
+g4_*.wrl

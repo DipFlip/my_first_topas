@@ -1,0 +1,27 @@
+{
+  "histories_per_configuration": 1000000,
+  "identical_source": "662 keV; uniform radius-60-mm disk at z=-100 mm; parallel +Z",
+  "control_is_matched": true,
+  "exact_180_degree_single_compton_energy_keV": 184.34959044526974,
+  "broadened_pulse_height_bump_center_5keV_channel": 192.5,
+  "additional_expected_counts_175_to_215_keV": 3974.688777259,
+  "phase_space": {
+    "control": {
+      "rear_entry_gamma_crossings": 626,
+      "distinct_histories_with_rear_entry": 623,
+      "rear_entry_crossings_under_300_keV": 601,
+      "note": "Crossings, not unique deposited-energy events; a gamma can recross"
+    },
+    "backscatter": {
+      "rear_entry_gamma_crossings": 8419,
+      "distinct_histories_with_rear_entry": 8399,
+      "rear_entry_crossings_under_300_keV": 8394,
+      "note": "Crossings, not unique deposited-energy events; a gamma can recross"
+    }
+  },
+  "pulse_height_validation": {
+    "control": "Event counts and independent energy integral agree",
+    "backscatter": "Event counts and independent energy integral agree"
+  },
+  "resolution": "Assumed Gaussian 3% FWHM at 662 keV, absolute width scales as sqrt(E)"
+}
